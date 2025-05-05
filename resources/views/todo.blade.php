@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
     <title>Todo app</title>
 </head>
-<body class="antialiased">
-<div>Hi</div>
+<body>
+<div class="font-bold underline">Hi</div>
 </body>
 </html>
