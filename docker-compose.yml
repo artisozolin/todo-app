@@ -28,13 +28,11 @@ services:
 
     # MySQL
     mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         container_name: mysql
         environment:
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-            MYSQL_DATABASE: ${DB_DATABASE}
-            MYSQL_USER: ${DB_USERNAME}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: todo
         volumes:
             - mysql-data:/var/lib/mysql
         networks:
