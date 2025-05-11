@@ -7,7 +7,7 @@
     <title>Todo app</title>
 </head>
 <body class="bg-gradient-to-b from-todo-lightPink">
-    <div class="m-auto w-xl mt-12">
+    <div class="m-auto w-xl mt-6">
         <div class="m-auto max-w-fit font-barlowMedium text-4xl mb-6">
             Todo List
         </div>
@@ -60,6 +60,24 @@
                 </div>
             @endforeach
         </div>
+        @if ($tasks->hasPages())
+            <div class="flex justify-center items-center mt-6 space-x-4 text-lg font-medium">
+                @if ($tasks->onFirstPage())
+                    <div class="text-gray-400 text-2xl">&lt;</div>
+                @else
+                    <a href="{{ $tasks->previousPageUrl() }}" class="no-underline text-2xl">&lt;</a>
+                @endif
+
+                <div class="px-4 outline outline-stone-950 outline-solid rounded-xl">{{ $tasks->currentPage() }}</div>
+
+                @if ($tasks->hasMorePages())
+                    <a href="{{ $tasks->nextPageUrl() }}" class="no-underline text-2xl">&gt;</a>
+                @else
+                    <div class="text-gray-400 text-2xl">&gt;</div>
+                @endif
+            </div>
+        @endif
+
         <div id="taskModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 content-center">
             <div class="bg-white rounded-xl p-6 w-full max-w-md m-auto">
                 <div class="flex justify-between mb-4">
