@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use Illuminate\Support\Facades\Cookie;
@@ -34,15 +35,25 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $cookieName = 'user_cookie';
         $cookieValue = $request->cookie($cookieName);
         $cookieExpirationTime = 60 * 24 * 30;
         $user = null;
+
+        $validatedData = $request->validate([
+            'description' => [
+                'required',
+                'string',
+                'max:255',
+                'not_regex:/[\'";=]|--/'
+            ],
+            'status' => 'nullable|string',
+        ]);
 
         if (!$cookieValue || !($user = User::where('generated_cookie', $cookieValue)->first())) {
             $newCookie = Str::uuid()->toString();
@@ -62,8 +73,8 @@ class TaskController extends Controller
         }
 
         Task::create([
-            'description' => $request->input('description'),
-            'status' => $request->input('status', 'in progress'),
+            'description' => $validatedData['description'],
+            'status' => $validatedData['status'] ?? 'in progress',
             'date' => now(),
             'user_id' => $user->id
         ]);
@@ -96,13 +107,28 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @param Task $task
+     * @return RedirectResponse
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Task $task): RedirectResponse
     {
-        $task->update($request->only(['description', 'status', 'date']));
+        $validatedData = $request->validate([
+            'description' => [
+                'required',
+                'string',
+                'max:255',
+                'not_regex:/[\'";=]|--/'
+            ],
+            'status' => 'nullable|string',
+        ]);
+
+        $task->update([
+            'description' => $validatedData['description'],
+            'status' => $validatedData['status'],
+            'date' => now(),
+        ]);
+
         return redirect()->back();
     }
 
@@ -110,7 +136,7 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function destroy(Task $task)
     {
