@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -11,7 +15,12 @@ use Carbon\Carbon;
 
 class TodoController extends Controller
 {
-    public function index()
+
+    /**
+     * @param Request $request
+     * @return Application|Factory|View
+     */
+    public function index(Request $request)
     {
         $cookieName = 'user_cookie';
         $cookieValue = Cookie::get($cookieName);
@@ -31,9 +40,17 @@ class TodoController extends Controller
             Cookie::queue($cookieName, $cookieValue, $cookieExpirationTime);
         }
 
-        $tasks = Task::where('user_id', $user->id)
-            ->orderBy('date', 'desc')
-            ->paginate(8);
+        $query = Task::where('user_id', $user->id);
+
+        if ($request->has('filter')) {
+            if ($request->filter == 'done') {
+                $query->where('status', 'Done');
+            } elseif ($request->filter == 'inprogress') {
+                $query->where('status', 'In progress');
+            }
+        }
+
+        $tasks = $query->orderBy('date', 'desc')->paginate(8);
 
         $totalTasks = Task::where('user_id', $user->id)->count();
         $doneTasks = Task::where('user_id', $user->id)->where('status', 'Done')->count();
