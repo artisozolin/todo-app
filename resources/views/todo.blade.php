@@ -7,11 +7,11 @@
         <title>Todo app</title>
     </head>
     <body class="bg-gradient-to-b from-todo-lightPink">
-        <div class="m-auto w-xl mt-6">
-            <div class="m-auto max-w-fit font-barlowMedium text-4xl mb-6">
+        <div class="m-auto sm:w-xl mt-4 sm:mt-6 p-4 sm:p-0">
+            <div class="m-auto max-w-fit font-barlowMedium sm:text-4xl text-2xl mb-6">
                 Todo List
             </div>
-            <form action="{{ route('tasks.store') }}" method="POST" class="flex font-barlow text-xl items-center">
+            <form action="{{ route('tasks.store') }}" method="POST" class="flex font-barlow text-sm sm:text-xl items-center">
                 @csrf
                 <div class="ml-auto w-full h-10">
                     <input type="text" name="description" id="todo" class="pl-2 rounded-xl shadow-md w-full h-full"
@@ -27,7 +27,7 @@
             @php
                 $currentFilter = request('filter');
             @endphp
-            <div class="task-stats text-center flex justify-between mt-6">
+            <div class="task-stats text-center flex justify-between mt-6 text-sm sm:text-base">
                 <a href="{{ url('/?filter=all') }}"
                    class="w-1/3 mr-4 py-2 bg-todo-grey rounded-xl shadow-md outline-2 outline-offset-1 hover:outline hover:outline-stone-950 hover:outline-solid {{ $currentFilter == 'all' ? 'outline outline-stone-950 outline-solid' : '' }}">
                     <div>Total</div>
@@ -54,7 +54,7 @@
                     <div class="task w-full bg-white rounded-xl h-14 flex mt-6 shadow-md justify-between outline-2
                     outline-offset-1 hover:outline hover:outline-stone-950 hover:outline-solid cursor-pointer"
                     onclick="openModal({{ $task }})">
-                        <div class="content-center pl-4">
+                        <div class="content-center pl-4 text-xs sm:text-base">
                             {{ $task->description }}
                         </div>
                         <div class="flex">
@@ -63,7 +63,7 @@
                             </div>
                             <div class="w-[102px] rounded-tr-xl rounded-br-xl content-center border-l-2 border-stone-950
                         {{ $task->status === 'Done' ? 'bg-todo-green' : ($task->status === 'In progress' ? 'bg-todo-yellow' : 'bg-gray-300') }}
-                                ml-2 text-center">
+                                ml-2 text-center text-xs sm:text-base">
                                 {{ $task->status }}
                             </div>
                         </div>
