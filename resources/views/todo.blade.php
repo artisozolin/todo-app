@@ -24,19 +24,25 @@
                     Add task
                 </button>
             </form>
+            @php
+                $currentFilter = request('filter');
+            @endphp
             <div class="task-stats text-center flex justify-between mt-6">
-                <div class="w-1/3 mr-4 py-2 bg-todo-grey rounded-xl shadow-md">
-                    <div>Total tasks</div>
+                <a href="{{ url('/?filter=all') }}"
+                   class="w-1/3 mr-4 py-2 bg-todo-grey rounded-xl shadow-md outline-2 outline-offset-1 hover:outline hover:outline-stone-950 hover:outline-solid {{ $currentFilter == 'all' ? 'outline outline-stone-950 outline-solid' : '' }}">
+                    <div>Total</div>
                     <div>{{ $totalTasks }}</div>
-                </div>
-                <div class="w-1/3 mx-4 py-2 bg-todo-grey rounded-xl shadow-md">
-                    <div>Tasks done</div>
+                </a>
+                <a href="{{ url('/?filter=done') }}"
+                   class="w-1/3 mx-4 py-2 bg-todo-grey rounded-xl shadow-md outline-2 outline-offset-1 hover:outline hover:outline-stone-950 hover:outline-solid {{ $currentFilter == 'done' ? 'outline outline-stone-950 outline-solid' : '' }}">
+                    <div>Done</div>
                     <div>{{ $doneTasks }}</div>
-                </div>
-                <div class="w-1/3 ml-4 py-2 bg-todo-grey rounded-xl shadow-md">
-                    <div>Tasks in progress</div>
+                </a>
+                <a href="{{ url('/?filter=inprogress') }}"
+                   class="w-1/3 ml-4 py-2 bg-todo-grey rounded-xl shadow-md outline-2 outline-offset-1 hover:outline hover:outline-stone-950 hover:outline-solid {{ $currentFilter == 'inprogress' ? 'outline outline-stone-950 outline-solid' : '' }}">
+                    <div>In progress</div>
                     <div>{{ $inProgressTasks }}</div>
-                </div>
+                </a>
             </div>
             <div class="task-pagination-by-day flex">
                 <div class="back-button"></div>
@@ -69,19 +75,18 @@
                     @if ($tasks->onFirstPage())
                         <div class="text-gray-400 text-2xl">&lt;</div>
                     @else
-                        <a href="{{ $tasks->previousPageUrl() }}" class="no-underline text-2xl">&lt;</a>
+                        <a href="{{ $tasks->appends(request()->query())->previousPageUrl() }}" class="no-underline text-2xl">&lt;</a>
                     @endif
 
                     <div class="px-4 outline outline-stone-950 outline-solid rounded-xl">{{ $tasks->currentPage() }}</div>
 
                     @if ($tasks->hasMorePages())
-                        <a href="{{ $tasks->nextPageUrl() }}" class="no-underline text-2xl">&gt;</a>
+                        <a href="{{ $tasks->appends(request()->query())->nextPageUrl() }}" class="no-underline text-2xl">&gt;</a>
                     @else
                         <div class="text-gray-400 text-2xl">&gt;</div>
                     @endif
                 </div>
             @endif
-
             <div id="taskModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 content-center">
                 <div class="bg-white rounded-xl p-6 w-full max-w-md m-auto">
                     <div class="flex justify-between mb-4">
