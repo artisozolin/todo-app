@@ -1,211 +1,206 @@
-<!DOCTYPE html>
-<html class="h-screen" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
-        <title>Todo app</title>
-    </head>
-    <body class="todo-page">
-        <div class="todo-container">
-            <div class="todo-list-title">
-                Todo List
-            </div>
-            <form action="{{ route('tasks.store') }}" method="POST" class="add-task-form">
-                @csrf
-                <div class="add-task-container">
-                    <input type="text" name="description" id="todo" class="add-task-input"
-                           required maxlength="255">
-                    <div id="todoError" class="add-task-error hidden">
-                        Invalid characters detected (quotes, semicolon, equals, double dash).
-                    </div>
-                </div>
-                <button type="submit" class="add-task-button">
-                    Add task
-                </button>
-            </form>
-            @php
-                $currentFilter = request('filter');
-            @endphp
-            <div class="task-stats-container">
-                <a href="{{ url('/?filter=all') }}"
-                   class="task-stats {{ $currentFilter == 'all' ? 'outline outline-stone-950 outline-solid' : '' }}">
-                    <div>Total</div>
-                    <div>{{ $totalTasks }}</div>
-                </a>
-                <a href="{{ url('/?filter=done') }}"
-                   class="task-stats {{ $currentFilter == 'done' ? 'outline outline-stone-950 outline-solid' : '' }}">
-                    <div>Done</div>
-                    <div>{{ $doneTasks }}</div>
-                </a>
-                <a href="{{ url('/?filter=inprogress') }}"
-                   class="task-stats {{ $currentFilter == 'inprogress' ? 'outline outline-stone-950 outline-solid' : '' }}">
-                    <div>In progress</div>
-                    <div>{{ $inProgressTasks }}</div>
-                </a>
-            </div>
-            <div class="task-list-container">
-                @foreach ($tasks as $task)
-                    <div class="task-container"
-                    onclick="openModal({{ $task }})">
-                        <div class="task-description">
-                            {{ $task->description }}
-                        </div>
-                        <div class="task-status-container">
-                            <div class="task-add-date">
-                                {{ \Carbon\Carbon::parse($task->date)->format('M jS') }}
-                            </div>
-                            <div class="task-status {{ $task->status === 'Done' ? 'bg-todo-green' :
-                            ($task->status === 'In progress' ? 'bg-todo-yellow' : 'bg-gray-300') }}">
-                                {{ $task->status }}
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-            @if ($tasks->hasPages())
-                <div class="todo-pagination-container">
-                    @if ($tasks->onFirstPage())
-                        <div class="todo-pagination-button-inactive">
-                            &lt;
-                        </div>
-                    @else
-                        <a href="{{ $tasks->appends(request()->query())->previousPageUrl() }}"
-                           class="todo-pagination-button-active">
-                            &lt;
-                        </a>
-                    @endif
+@include('partials.header')
 
-                    <div class="todo-pagination-current-page">
-                        {{ $tasks->currentPage() }}
-                    </div>
-
-                    @if ($tasks->hasMorePages())
-                        <a href="{{ $tasks->appends(request()->query())->nextPageUrl() }}"
-                           class="todo-pagination-button-active">
-                            &gt;
-                        </a>
-                    @else
-                        <div class="todo-pagination-button-inactive">
-                            &gt;
-                        </div>
-                    @endif
-                </div>
-            @endif
-            <div id="taskModal" class="todo-modal hidden">
-                <div class="todo-modal-container">
-                    <div class="todo-modal-header">
-                        <h2 class="todo-modal-title">Edit Task</h2>
-                        <button onclick="closeModal()" class="todo-modal-exit-button">
-                            &times;
-                        </button>
-                    </div>
-
-                    <form id="taskForm" method="POST" class="todo-modal-form">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="task_id" id="task_id">
-
-                        <label class="todo-modal-label">Description:</label>
-                        <input type="text" name="description" id="description" maxlength="255" class="todo-modal-input">
-                        <div id="descriptionError" class="todo-modal-error hidden">
-                            Invalid characters detected (quotes, semicolon, equals, double dash).
-                        </div>
-
-                        <label class="todo-modal-label">Status:</label>
-                        <select name="status" id="status" class="todo-modal-input">
-                            <option value="In progress">In Progress</option>
-                            <option value="Done">Done</option>
-                        </select>
-
-                        <label class="todo-modal-label">Date:</label>
-                        <input type="datetime-local" name="date" id="date" class="todo-modal-input">
-
-                        <div class="todo-modal-footer">
-                            <button type="submit" class="todo-modal-submit">
-                                Save
-                            </button>
-                            <button type="button" onclick="deleteTask()" class="todo-modal-delete">
-                                Delete
-                            </button>
-                        </div>
-                    </form>
-                </div>
+<div class="todo-container">
+    <div class="todo-list-title">
+        Todo List
+    </div>
+    <form action="{{ route('tasks.store') }}" method="POST" class="add-task-form">
+        @csrf
+        <div class="add-task-container">
+            <input type="text" name="description" id="todo" class="add-task-input"
+                   required maxlength="255">
+            <div id="todoError" class="add-task-error hidden">
+                Invalid characters detected (quotes, semicolon, equals, double dash).
             </div>
         </div>
-        <script>
-            function openModal(task) {
-                document.getElementById('taskModal').classList.remove('hidden');
-                document.getElementById('task_id').value = task.id;
-                document.getElementById('description').value = task.description;
-                document.getElementById('status').value = task.status;
-                document.getElementById('date').value = new Date(task.date).toISOString().slice(0, 16);
+        <button type="submit" class="add-task-button">
+            Add task
+        </button>
+    </form>
+    @php
+        $currentFilter = request('filter');
+    @endphp
+    <div class="task-stats-container">
+        <a href="{{ url('/?filter=all') }}"
+           class="task-stats {{ $currentFilter == 'all' ? 'outline outline-stone-950 outline-solid' : '' }}">
+            <div>Total</div>
+            <div>{{ $totalTasks }}</div>
+        </a>
+        <a href="{{ url('/?filter=done') }}"
+           class="task-stats {{ $currentFilter == 'done' ? 'outline outline-stone-950 outline-solid' : '' }}">
+            <div>Done</div>
+            <div>{{ $doneTasks }}</div>
+        </a>
+        <a href="{{ url('/?filter=inprogress') }}"
+           class="task-stats {{ $currentFilter == 'inprogress' ? 'outline outline-stone-950 outline-solid' : '' }}">
+            <div>In progress</div>
+            <div>{{ $inProgressTasks }}</div>
+        </a>
+    </div>
+    <div class="task-list-container">
+        @foreach ($tasks as $task)
+            <div class="task-container"
+                 onclick="openModal({{ $task }})">
+                <div class="task-description">
+                    {{ $task->description }}
+                </div>
+                <div class="task-status-container">
+                    <div class="task-add-date">
+                        {{ \Carbon\Carbon::parse($task->date)->format('M jS') }}
+                    </div>
+                    <div class="task-status {{ $task->status === 'Done' ? 'bg-todo-green' :
+                            ($task->status === 'In progress' ? 'bg-todo-yellow' : 'bg-gray-300') }}">
+                        {{ $task->status }}
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    @if ($tasks->hasPages())
+        <div class="todo-pagination-container">
+            @if ($tasks->onFirstPage())
+                <div class="todo-pagination-button-inactive">
+                    &lt;
+                </div>
+            @else
+                <a href="{{ $tasks->appends(request()->query())->previousPageUrl() }}"
+                   class="todo-pagination-button-active">
+                    &lt;
+                </a>
+            @endif
 
-                document.getElementById('taskForm').action = `/tasks/${task.id}`;
-            }
+            <div class="todo-pagination-current-page">
+                {{ $tasks->currentPage() }}
+            </div>
 
-            function closeModal() {
-                document.getElementById('taskModal').classList.add('hidden');
-            }
+            @if ($tasks->hasMorePages())
+                <a href="{{ $tasks->appends(request()->query())->nextPageUrl() }}"
+                   class="todo-pagination-button-active">
+                    &gt;
+                </a>
+            @else
+                <div class="todo-pagination-button-inactive">
+                    &gt;
+                </div>
+            @endif
+        </div>
+    @endif
+    <div id="taskModal" class="todo-modal hidden">
+        <div class="todo-modal-container">
+            <div class="todo-modal-header">
+                <h2 class="todo-modal-title">Edit Task</h2>
+                <button onclick="closeModal()" class="todo-modal-exit-button">
+                    &times;
+                </button>
+            </div>
 
-            function deleteTask() {
-                const taskId = document.getElementById('task_id').value;
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `/tasks/${taskId}`;
-                form.innerHTML = `
+            <form id="taskForm" method="POST" class="todo-modal-form">
                 @csrf
-                @method('DELETE')
-                `;
-                document.body.appendChild(form);
-                form.submit();
+                @method('PUT')
+                <input type="hidden" name="task_id" id="task_id">
+
+                <label class="todo-modal-label">Description:</label>
+                <textarea type="text" name="description" id="description" maxlength="255"
+                          class="todo-modal-input">
+                        </textarea>
+                <div id="descriptionError" class="todo-modal-error hidden">
+                    Invalid characters detected (quotes, semicolon, equals, double dash).
+                </div>
+
+                <label class="todo-modal-label">Status:</label>
+                <select name="status" id="status" class="todo-modal-input">
+                    <option value="In progress">In Progress</option>
+                    <option value="Done">Done</option>
+                </select>
+
+                <label class="todo-modal-label">Date:</label>
+                <input type="datetime-local" name="date" id="date" class="todo-modal-input">
+
+                <div class="todo-modal-footer">
+                    <button type="submit" class="todo-modal-submit">
+                        Save
+                    </button>
+                    <button type="button" onclick="deleteTask()" class="todo-modal-delete">
+                        Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function openModal(task) {
+        document.getElementById('taskModal').classList.remove('hidden');
+        document.getElementById('task_id').value = task.id;
+        document.getElementById('description').value = task.description;
+        document.getElementById('status').value = task.status;
+        document.getElementById('date').value = new Date(task.date).toISOString().slice(0, 16);
+
+        document.getElementById('taskForm').action = `/tasks/${task.id}`;
+    }
+
+    function closeModal() {
+        document.getElementById('taskModal').classList.add('hidden');
+    }
+
+    function deleteTask() {
+        const taskId = document.getElementById('task_id').value;
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/tasks/${taskId}`;
+        form.innerHTML = `
+                @csrf
+        @method('DELETE')
+        `;
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+<script>
+    function validateDescription(input, errorElement) {
+        const forbiddenPattern = /['";=]|--/;
+        const value = input.value.trim();
+
+        if (value === '' || forbiddenPattern.test(value)) {
+            input.classList.add('invalid-input');
+            errorElement.classList.remove('hidden');
+            return false;
+        } else {
+            input.classList.remove('invalid-input');
+            errorElement.classList.add('hidden');
+            return true;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form[action="{{ route('tasks.store') }}"]');
+        const descriptionInput = document.getElementById('todo');
+        const todoError = document.getElementById('todoError');
+
+        descriptionInput.addEventListener('input', function () {
+            validateDescription(descriptionInput, todoError);
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (!validateDescription(descriptionInput, todoError)) {
+                e.preventDefault();
             }
-        </script>
-        <script>
-            function validateDescription(input, errorElement) {
-                const forbiddenPattern = /['";=]|--/;
-                const value = input.value.trim();
+        });
 
-                if (value === '' || forbiddenPattern.test(value)) {
-                    input.classList.add('invalid-input');
-                    errorElement.classList.remove('hidden');
-                    return false;
-                } else {
-                    input.classList.remove('invalid-input');
-                    errorElement.classList.add('hidden');
-                    return true;
-                }
+        const modalForm = document.getElementById('taskForm');
+        const modalDescriptionInput = document.getElementById('description');
+        const descriptionError = document.getElementById('descriptionError');
+
+        modalDescriptionInput.addEventListener('input', function () {
+            validateDescription(modalDescriptionInput, descriptionError);
+        });
+
+        modalForm.addEventListener('submit', function (e) {
+            if (!validateDescription(modalDescriptionInput, descriptionError)) {
+                e.preventDefault();
             }
+        });
+    });
+</script>
 
-            document.addEventListener('DOMContentLoaded', () => {
-                const form = document.querySelector('form[action="{{ route('tasks.store') }}"]');
-                const descriptionInput = document.getElementById('todo');
-                const todoError = document.getElementById('todoError');
-
-                descriptionInput.addEventListener('input', function () {
-                    validateDescription(descriptionInput, todoError);
-                });
-
-                form.addEventListener('submit', function (e) {
-                    if (!validateDescription(descriptionInput, todoError)) {
-                        e.preventDefault();
-                    }
-                });
-
-                const modalForm = document.getElementById('taskForm');
-                const modalDescriptionInput = document.getElementById('description');
-                const descriptionError = document.getElementById('descriptionError');
-
-                modalDescriptionInput.addEventListener('input', function () {
-                    validateDescription(modalDescriptionInput, descriptionError);
-                });
-
-                modalForm.addEventListener('submit', function (e) {
-                    if (!validateDescription(modalDescriptionInput, descriptionError)) {
-                        e.preventDefault();
-                    }
-                });
-            });
-        </script>
-    </body>
-</html>
+@include('partials.footer')

@@ -65,7 +65,7 @@
         }
 
         .todo-list-title {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .todo-list-title {
@@ -154,6 +154,10 @@
                 }
 
                 .add-task-error {
+                    position: absolute;
+                }
+
+                .add-task-error {
                     margin-left: 0.5rem;
                 }
 
@@ -162,13 +166,21 @@
                 }
 
                 .add-task-error {
-                    font-size: 0.875rem;
-                    line-height: 1.25rem;
+                    font-size: 0.75rem;
+                    line-height: 1rem;
                 }
 
                 .add-task-error {
                     --tw-text-opacity: 1;
                     color: rgb(239 68 68 / var(--tw-text-opacity, 1));
+                }
+
+                @media (min-width: 640px) {
+
+                    .add-task-error {
+                        font-size: 0.875rem;
+                        line-height: 1.25rem;
+                    }
                 }
             }
 
@@ -205,7 +217,7 @@
         }
 
         .task-stats-container {
-            margin-top: 1.5rem;
+            margin-top: 2.5rem;
         }
 
         .task-stats-container {
@@ -223,6 +235,13 @@
         .task-stats-container {
             font-size: 0.875rem;
             line-height: 1.25rem;
+        }
+
+        @media (min-width: 640px) {
+
+            .task-stats-container {
+                margin-top: 2rem;
+            }
         }
 
         @media (min-width: 640px) {
@@ -269,6 +288,10 @@
 
             .task-stats {
                 outline-offset: 1px;
+            }
+
+            .task-stats:last-child {
+                margin-right: 0px;
             }
 
             .task-stats:hover {
