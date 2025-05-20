@@ -50,7 +50,7 @@ class TodoController extends Controller
             }
         }
 
-        $tasks = $query->orderBy('date', 'desc')->paginate(8);
+        $tasks = $query->orderBy('date', 'desc')->orderBy('id', 'asc')->paginate(8);
 
         $totalTasks = Task::where('user_id', $user->id)->count();
         $doneTasks = Task::where('user_id', $user->id)->where('status', 'Done')->count();

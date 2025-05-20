@@ -13,7 +13,7 @@
                 Invalid characters detected (quotes, semicolon, equals, double dash).
             </div>
         </div>
-        <button type="submit" class="add-task-button">
+        <button type="submit" id="todoSubmit" class="add-task-button">
             Add task
         </button>
     </form>
@@ -117,7 +117,7 @@
                 <input type="datetime-local" name="date" id="date" class="todo-modal-input">
 
                 <div class="todo-modal-footer">
-                    <button type="submit" class="todo-modal-submit">
+                    <button type="submit" id="modalSubmit" class="todo-modal-submit">
                         Save
                     </button>
                     <button type="button" onclick="deleteTask()" class="todo-modal-delete">
@@ -155,34 +155,42 @@
         document.body.appendChild(form);
         form.submit();
     }
-</script>
-<script>
-    function validateDescription(input, errorElement) {
+
+    function validateDescription(input, errorElement, submitButton) {
         const forbiddenPattern = /['";=]|--/;
         const value = input.value.trim();
 
-        if (value === '' || forbiddenPattern.test(value)) {
+        const isValid = !(value === '' || forbiddenPattern.test(value));
+
+        if (!isValid) {
             input.classList.add('invalid-input');
             errorElement.classList.remove('hidden');
-            return false;
+            submitButton.disabled = true;
+            submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+            submitButton.classList.remove('bg-todo-lightGreen');
         } else {
             input.classList.remove('invalid-input');
             errorElement.classList.add('hidden');
-            return true;
+            submitButton.disabled = false;
+            submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+            submitButton.classList.add('bg-todo-lightGreen');
         }
+
+        return isValid;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.querySelector('form[action="{{ route('tasks.store') }}"]');
         const descriptionInput = document.getElementById('todo');
         const todoError = document.getElementById('todoError');
+        const submitButton = document.getElementById('todoSubmit');
 
         descriptionInput.addEventListener('input', function () {
-            validateDescription(descriptionInput, todoError);
+            validateDescription(descriptionInput, todoError, submitButton);
         });
 
         form.addEventListener('submit', function (e) {
-            if (!validateDescription(descriptionInput, todoError)) {
+            if (!validateDescription(descriptionInput, todoError, submitButton)) {
                 e.preventDefault();
             }
         });
@@ -190,13 +198,14 @@
         const modalForm = document.getElementById('taskForm');
         const modalDescriptionInput = document.getElementById('description');
         const descriptionError = document.getElementById('descriptionError');
+        const modalSubmitButton = document.getElementById('modalSubmit');
 
         modalDescriptionInput.addEventListener('input', function () {
-            validateDescription(modalDescriptionInput, descriptionError);
+            validateDescription(modalDescriptionInput, descriptionError, modalSubmitButton);
         });
 
         modalForm.addEventListener('submit', function (e) {
-            if (!validateDescription(modalDescriptionInput, descriptionError)) {
+            if (!validateDescription(modalDescriptionInput, descriptionError, modalSubmitButton)) {
                 e.preventDefault();
             }
         });

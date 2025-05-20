@@ -45,7 +45,8 @@
             }
 
             .add-task-button {
-                @apply mr-auto ml-2 w-32 h-10 bg-todo-lightGreen rounded-xl shadow-md;
+                @apply mr-auto ml-2 w-32 h-10 bg-todo-green rounded-xl shadow-md transition-colors duration-150
+                disabled:bg-gray-400 disabled:cursor-not-allowed;
             }
         }
 
@@ -66,14 +67,14 @@
                 outline-offset-1 hover:outline hover:outline-stone-950 cursor-pointer;
 
                 .task-description {
-                    @apply content-center pl-4 text-xs sm:text-base;
+                    @apply content-center px-4 text-xs sm:text-base truncate;
                 }
 
                 .task-status-container {
                     @apply flex;
 
                     .task-add-date {
-                        @apply content-center text-xs;
+                        @apply content-center text-xs w-[51px];
                     }
 
                     .task-status {
@@ -137,11 +138,12 @@
                     @apply flex justify-between;
 
                     .todo-modal-submit {
-                        @apply bg-blue-500 text-white px-4 py-2 rounded;
+                        @apply bg-todo-green px-4 py-2 rounded transition-colors duration-150
+                        disabled:bg-gray-400 disabled:cursor-not-allowed;
                     }
 
                     .todo-modal-delete {
-                        @apply bg-red-500 text-white px-4 py-2 rounded;
+                        @apply bg-red-500 px-4 py-2 rounded;
                     }
                 }
             }

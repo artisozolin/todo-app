@@ -206,13 +206,32 @@
 
             .add-task-button {
                 --tw-bg-opacity: 1;
-                background-color: rgb(211 255 152 / var(--tw-bg-opacity, 1));
+                background-color: rgb(153 255 133 / var(--tw-bg-opacity, 1));
             }
 
             .add-task-button {
                 --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
                 --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
                 box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+            }
+
+            .add-task-button {
+                transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                transition-duration: 150ms;
+            }
+
+            .add-task-button {
+                transition-duration: 150ms;
+            }
+
+            .add-task-button:disabled {
+                cursor: not-allowed;
+            }
+
+            .add-task-button:disabled {
+                --tw-bg-opacity: 1;
+                background-color: rgb(156 163 175 / var(--tw-bg-opacity, 1));
             }
         }
 
@@ -372,7 +391,14 @@
                 }
 
                 .task-description {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .task-description {
                     padding-left: 1rem;
+                    padding-right: 1rem;
                 }
 
                 .task-description {
@@ -393,6 +419,10 @@
                 }
 
                 .task-status-container {
+
+                    .task-add-date {
+                        width: 51px;
+                    }
 
                     .task-add-date {
                         align-content: center;
@@ -682,7 +712,7 @@
 
                     .todo-modal-submit {
                         --tw-bg-opacity: 1;
-                        background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
+                        background-color: rgb(153 255 133 / var(--tw-bg-opacity, 1));
                     }
 
                     .todo-modal-submit {
@@ -696,8 +726,22 @@
                     }
 
                     .todo-modal-submit {
-                        --tw-text-opacity: 1;
-                        color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+                        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+                        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                        transition-duration: 150ms;
+                    }
+
+                    .todo-modal-submit {
+                        transition-duration: 150ms;
+                    }
+
+                    .todo-modal-submit:disabled {
+                        cursor: not-allowed;
+                    }
+
+                    .todo-modal-submit:disabled {
+                        --tw-bg-opacity: 1;
+                        background-color: rgb(156 163 175 / var(--tw-bg-opacity, 1));
                     }
 
                     .todo-modal-delete {
@@ -717,11 +761,6 @@
                     .todo-modal-delete {
                         padding-top: 0.5rem;
                         padding-bottom: 0.5rem;
-                    }
-
-                    .todo-modal-delete {
-                        --tw-text-opacity: 1;
-                        color: rgb(255 255 255 / var(--tw-text-opacity, 1));
                     }
                 }
             }
@@ -1257,13 +1296,24 @@ video {
 .h-screen {
     height: 100vh;
 }
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
 .bg-gray-300 {
     --tw-bg-opacity: 1;
     background-color: rgb(209 213 219 / var(--tw-bg-opacity, 1));
 }
+.bg-gray-400 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(156 163 175 / var(--tw-bg-opacity, 1));
+}
 .bg-todo-green {
     --tw-bg-opacity: 1;
     background-color: rgb(153 255 133 / var(--tw-bg-opacity, 1));
+}
+.bg-todo-lightGreen {
+    --tw-bg-opacity: 1;
+    background-color: rgb(211 255 152 / var(--tw-bg-opacity, 1));
 }
 .bg-todo-yellow {
     --tw-bg-opacity: 1;
