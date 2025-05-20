@@ -66,6 +66,9 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
+    /**
+     * @param Schedule $schedule
+     */
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('users:deactivate-inactive')->daily();

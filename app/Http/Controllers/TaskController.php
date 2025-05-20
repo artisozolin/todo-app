@@ -120,13 +120,14 @@ class TaskController extends Controller
                 'max:255',
                 'not_regex:/[\'";=]|--/'
             ],
-            'status' => 'nullable|string',
+            'status' => 'required|in:In progress,Done',
+            'date' => 'required|date',
         ]);
 
         $task->update([
             'description' => $validatedData['description'],
             'status' => $validatedData['status'],
-            'date' => now(),
+            'date' => $validatedData['date'],
         ]);
 
         return redirect()->back();
@@ -135,7 +136,7 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Task $task
      * @return RedirectResponse
      */
     public function destroy(Task $task)
