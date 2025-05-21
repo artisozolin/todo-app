@@ -96,6 +96,14 @@
         }
 
         .add-task-form {
+            height: 100%;
+        }
+
+        .add-task-form {
+            flex-direction: column;
+        }
+
+        .add-task-form {
             align-items: center;
         }
 
@@ -123,7 +131,7 @@
             }
 
             .add-task-container {
-                height: 2.5rem;
+                height: 100%;
             }
 
             .add-task-container {
@@ -131,9 +139,13 @@
             }
 
             .add-task-container {
+                flex-direction: column;
+            }
+
+            .add-task-container {
 
                 .add-task-input {
-                    height: 100%;
+                    height: 2.5rem;
                 }
 
                 .add-task-input {
@@ -190,7 +202,7 @@
             }
 
             .add-task-button {
-                margin-left: 0.5rem;
+                margin-top: 1.5rem;
             }
 
             .add-task-button {
@@ -198,7 +210,7 @@
             }
 
             .add-task-button {
-                width: 8rem;
+                width: 100%;
             }
 
             .add-task-button {
@@ -260,7 +272,7 @@
         @media (min-width: 640px) {
 
             .task-stats-container {
-                margin-top: 2rem;
+                margin-top: 1rem;
             }
         }
 
@@ -1290,6 +1302,9 @@ video {
 
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
+}
+.mt-6 {
+    margin-top: 1.5rem;
 }
 .hidden {
     display: none;

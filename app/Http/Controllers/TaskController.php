@@ -46,6 +46,12 @@ class TaskController extends Controller
         $user = null;
 
         $validatedData = $request->validate([
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+                'not_regex:/[\'";=]|--/'
+            ],
             'description' => [
                 'required',
                 'string',
@@ -73,6 +79,7 @@ class TaskController extends Controller
         }
 
         Task::create([
+            'title' => $validatedData['title'],
             'description' => $validatedData['description'],
             'status' => $validatedData['status'] ?? 'in progress',
             'date' => now(),
@@ -114,20 +121,26 @@ class TaskController extends Controller
     public function update(Request $request, Task $task): RedirectResponse
     {
         $validatedData = $request->validate([
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+                'not_regex:/[\'";=]|--/'
+            ],
             'description' => [
                 'required',
                 'string',
                 'max:255',
                 'not_regex:/[\'";=]|--/'
             ],
-            'status' => 'required|in:In progress,Done',
-            'date' => 'required|date',
+            'status' => 'nullable|string',
         ]);
 
         $task->update([
+            'title' => $validatedData['title'],
             'description' => $validatedData['description'],
             'status' => $validatedData['status'],
-            'date' => $validatedData['date'],
+            'date' => $request->input('date'),
         ]);
 
         return redirect()->back();
