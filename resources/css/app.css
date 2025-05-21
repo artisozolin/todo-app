@@ -20,7 +20,7 @@
 }
 
 .todo-page {
-    @apply bg-gradient-to-b from-todo-lightPink;
+    @apply min-h-screen bg-gradient-to-b from-todo-lightPink;
 
     .todo-container {
         @apply m-auto sm:w-xl mt-4 sm:mt-6 p-4 sm:p-0;
