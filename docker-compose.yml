@@ -3,7 +3,9 @@ version: '3.3'
 services:
     # PHP-FPM
     app:
-        image: php:8.0-fpm
+        build:
+            context: .
+            dockerfile: Dockerfile
         container_name: laravel-app
         working_dir: /var/www
         volumes:
