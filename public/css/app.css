@@ -20,6 +20,7 @@
 }
 
 .todo-page {
+    min-height: 100vh;
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
     --tw-gradient-from: #FFE2C5 var(--tw-gradient-from-position);
     --tw-gradient-to: rgb(255 226 197 / 0) var(--tw-gradient-to-position);
@@ -1292,9 +1293,6 @@ video {
 }
 .hidden {
     display: none;
-}
-.h-screen {
-    height: 100vh;
 }
 .cursor-not-allowed {
     cursor: not-allowed;
