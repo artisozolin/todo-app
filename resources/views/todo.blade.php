@@ -4,7 +4,7 @@
     <div class="todo-list-title">
         Todo List
     </div>
-    <form action="{{ route('tasks.store') }}" method="POST" class="add-task-form">
+    <form id="taskFormMain" action="{{ route('tasks.store') }}" method="POST" class="add-task-form">
         @csrf
         <div class="add-task-container">
             <input type="text" name="title" placeholder="Title" id="todoTitle" class="add-task-input"
@@ -159,8 +159,7 @@
         document.body.appendChild(form);
         form.submit();
     }
-
-    function validateField(input, errorElement, submitButton) {
+    function validateField(input, errorElement, touched) {
         const forbiddenPattern = /['";=]|--/;
         const value = input.value.trim();
         let errorMessage = "";
@@ -171,59 +170,80 @@
             errorMessage = "Invalid characters detected (quotes, semicolon, etc).";
         }
 
-        if (errorMessage) {
+        const isValid = errorMessage === "";
+
+        if (!isValid && touched[input.id]) {
             input.classList.add('invalid-input');
             errorElement.textContent = errorMessage;
             errorElement.classList.remove('hidden');
-            submitButton.disabled = true;
-            submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
-            submitButton.classList.remove('bg-todo-lightGreen');
-            return false;
         } else {
             input.classList.remove('invalid-input');
             errorElement.classList.add('hidden');
-            submitButton.disabled = false;
+        }
+
+        return isValid;
+    }
+
+    function updateSubmitButtonState(isFormValid, submitButton) {
+        submitButton.disabled = !isFormValid;
+        if (isFormValid) {
             submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
-            submitButton.classList.add('bg-todo-lightGreen');
-            return true;
+            submitButton.classList.add('bg-todo-green');
+        } else {
+            submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+            submitButton.classList.remove('bg-todo-green');
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.querySelector('form[action="{{ route('tasks.store') }}"]');
-        const titleInput = document.getElementById('todoTitle');
-        const titleError = document.getElementById('todoTitleError');
-        const descriptionInput = document.getElementById('todo');
-        const todoError = document.getElementById('todoError');
-        const submitButton = document.getElementById('todoSubmit');
+    function setupFormValidation({ formId, inputs, errorIds, submitButtonId }) {
+        const form = document.getElementById(formId);
+        const submitButton = document.getElementById(submitButtonId);
 
-        titleInput.addEventListener('input', () => validateField(titleInput, titleError, submitButton));
-        descriptionInput.addEventListener('input', () => validateField(descriptionInput, todoError, submitButton));
+        const inputElements = inputs.map(id => document.getElementById(id));
+        const errorElements = errorIds.map(id => document.getElementById(id));
 
-        form.addEventListener('submit', function (e) {
-            const isTitleValid = validateField(titleInput, titleError, submitButton);
-            const isDescriptionValid = validateField(descriptionInput, todoError, submitButton);
-            if (!isTitleValid || !isDescriptionValid) {
-                e.preventDefault();
-            }
+        const touched = Object.fromEntries(inputs.map(id => [id, false]));
+
+        submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+
+        inputElements.forEach((input) => {
+            input.addEventListener('input', () => {
+                if (!touched[input.id]) touched[input.id] = true;
+
+                const isValid = inputElements.map((inp, i) =>
+                    validateField(inp, errorElements[i], touched, submitButton)
+                ).every(Boolean);
+
+                updateSubmitButtonState(isValid, submitButton);
+            });
         });
 
-        const modalForm = document.getElementById('taskForm');
-        const modalTitleInput = document.getElementById('modalTitle');
-        const modalTitleError = document.getElementById('modalTitleError');
-        const modalDescriptionInput = document.getElementById('description');
-        const modalDescriptionError = document.getElementById('descriptionError');
-        const modalSubmitButton = document.getElementById('modalSubmit');
+        form.addEventListener('submit', (e) => {
+            inputs.forEach(id => touched[id] = true);
 
-        modalTitleInput.addEventListener('input', () => validateField(modalTitleInput, modalTitleError, modalSubmitButton));
-        modalDescriptionInput.addEventListener('input', () => validateField(modalDescriptionInput, modalDescriptionError, modalSubmitButton));
+            const isValid = inputElements.map((inp, i) =>
+                validateField(inp, errorElements[i], touched, submitButton)
+            ).every(Boolean);
 
-        modalForm.addEventListener('submit', function (e) {
-            const isTitleValid = validateField(modalTitleInput, modalTitleError, modalSubmitButton);
-            const isDescriptionValid = validateField(modalDescriptionInput, modalDescriptionError, modalSubmitButton);
-            if (!isTitleValid || !isDescriptionValid) {
-                e.preventDefault();
-            }
+            updateSubmitButtonState(isValid, submitButton);
+
+            if (!isValid) e.preventDefault();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setupFormValidation({
+            formId: 'taskFormMain',
+            inputs: ['todoTitle', 'todo'],
+            errorIds: ['todoTitleError', 'todoError'],
+            submitButtonId: 'todoSubmit',
+        });
+
+        setupFormValidation({
+            formId: 'taskForm',
+            inputs: ['modalTitle', 'description'],
+            errorIds: ['modalTitleError', 'descriptionError'],
+            submitButtonId: 'modalSubmit',
         });
     });
 </script>

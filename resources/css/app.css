@@ -45,7 +45,7 @@
             }
 
             .add-task-button {
-                @apply mr-auto w-full h-10 mt-6 bg-todo-green rounded-xl shadow-md transition-colors duration-150
+                @apply mr-auto w-full h-10 mt-6 rounded-xl shadow-md transition-colors duration-150
                 disabled:bg-gray-400 disabled:cursor-not-allowed;
             }
         }
@@ -74,7 +74,7 @@
                     @apply flex;
 
                     .task-add-date {
-                        @apply content-center text-xs w-[51px];
+                        @apply content-center text-xs w-14;
                     }
 
                     .task-status {
@@ -86,7 +86,7 @@
         }
 
         .todo-pagination-container {
-            @apply flex justify-center items-center mt-6 space-x-4 text-lg font-medium;
+            @apply flex justify-center items-center mt-6 space-x-4 text-lg font-medium mb-4;
 
             .todo-pagination-button-inactive {
                 @apply text-gray-400 text-2xl;

@@ -218,11 +218,6 @@
             }
 
             .add-task-button {
-                --tw-bg-opacity: 1;
-                background-color: rgb(153 255 133 / var(--tw-bg-opacity, 1));
-            }
-
-            .add-task-button {
                 --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
                 --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
                 box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -434,7 +429,7 @@
                 .task-status-container {
 
                     .task-add-date {
-                        width: 51px;
+                        width: 3.5rem;
                     }
 
                     .task-add-date {
@@ -497,6 +492,10 @@
 
         .todo-pagination-container {
             margin-top: 1.5rem;
+        }
+
+        .todo-pagination-container {
+            margin-bottom: 1rem;
         }
 
         .todo-pagination-container {
@@ -1323,10 +1322,6 @@ video {
 .bg-todo-green {
     --tw-bg-opacity: 1;
     background-color: rgb(153 255 133 / var(--tw-bg-opacity, 1));
-}
-.bg-todo-lightGreen {
-    --tw-bg-opacity: 1;
-    background-color: rgb(211 255 152 / var(--tw-bg-opacity, 1));
 }
 .bg-todo-yellow {
     --tw-bg-opacity: 1;
